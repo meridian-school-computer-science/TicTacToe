@@ -1,3 +1,6 @@
+import random
+
+
 class Cell:
 
     def __init__(self, start_value):
@@ -31,6 +34,7 @@ class Board:
     def __init__(self):
         self.cells = []
         self.setup_board()
+        self.available = [i for i in range(9)]
 
     def setup_board(self):
         for x in range(1,10):
@@ -96,8 +100,52 @@ class Board:
             f" {self.cells[x+1].content} |" \
             f" {self.cells[x+2].content} \n"
             build = build + temp
-            if x in (0, 3): build = build + line
+            if x in (0, 3):
+                build = build + line
         return build
+
+    def update_open_cells(self):
+        self.available = []
+        for i in range(9):
+            if self.cells[i].is_available:
+                self.available.append(i)
+
+    def evaluate_board(self):
+        win_move = self.cell_to_win()
+        block_move = self.cell_to_block()
+        best_move_list = [0, 2, 4, 6, 8]
+        if win_move is not None:
+            return win_move
+        elif block_move is not None:
+            return block_move
+        else:
+            for i in best_move_list:
+                if self.cells[i].is_available:
+                    continue
+                else:
+                    best_move_list.remove(i)
+
+            return random.choice(best_move_list)
+
+    def cell_to_block(self):
+        self.update_open_cells()
+        for i in self.available:
+            self.cells[i].set('X')
+            if self.winner_is() == 'X':
+                self.cells[i].set(str(i+1))
+                return i
+            self.cells[i].set(str(i+1))
+        return None
+
+    def cell_to_win(self):
+        self.update_open_cells()
+        for i in self.available:
+            self.cells[i].set('O')
+            if self.winner_is() == 'O':
+                self.cells[i].set(str(i+1))
+                return i
+            self.cells[i].set(str(i+1))
+        return None
 
 
 class Player:
@@ -134,7 +182,8 @@ class ComputerPlayer(Player):
     def __init__(self):
         Player.__init__(self, 'Hal')
 
-    def make_move(self, the_board):
-        for i in range(9):
-            if the_board.cells[i].is_available: return i
+    def make_move(self, the_board: Board):
+        move = the_board.evaluate_board()
+        return move
+
 

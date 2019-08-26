@@ -11,7 +11,7 @@ class Game:
         self.play_game()
 
     def play_game(self):
-        while self.winner is None or self.board.not_full:
+        while self.winner is None and self.board.not_full:
             print(self.board.display_board())
             self.board.cells[self.human.make_move(self.board)].set('X')
             self.winner = self.board.winner_is()
