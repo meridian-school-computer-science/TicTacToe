@@ -11,7 +11,8 @@ class Game:
         self.play_game()
 
     def play_game(self):
-        while self.winner is None and self.board.not_full:
+        playing = True
+        while playing:
             print(self.board.display_board())
             self.board.cells[self.human.make_move(self.board)].set('X')
             self.winner = self.board.winner_is()
@@ -19,6 +20,10 @@ class Game:
                 print(self.board.display_board())
                 self.board.cells[self.computer.make_move(self.board)].set('O')
                 self.winner = self.board.winner_is()
+            if self.winner is not None:
+                playing = False
+            if self.board.not_full() is False:
+                playing = False
 
         if self.winner is None:
             print(f"Game finished with a Tie.")
