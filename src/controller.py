@@ -20,7 +20,11 @@ class Game:
                 self.board.cells[self.computer.make_move(self.board)].set('O')
                 self.winner = self.board.winner_is()
 
-        print(f"Game finished,")
-        print(self.board.display_board())
-        print(f"and winner is: {self.winner}.")
+        if self.winner is None:
+            print(f"Game finished with a Tie.")
+            print(self.board.display_board())
+        else:
+            print(f"Game finished,")
+            print(self.board.display_board())
+            print(f"and winner is: {self.winner}.")
 

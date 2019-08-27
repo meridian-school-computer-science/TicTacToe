@@ -53,6 +53,9 @@ class Board:
             result = result or self.cells[i].is_available
         return result
 
+    def cells_in_list(self):
+        return self.cells
+
     def winner_is(self):
         winner = None
         for temp_player in ('X', 'O'):
@@ -109,6 +112,13 @@ class Board:
         for i in range(9):
             if self.cells[i].is_available:
                 self.available.append(i)
+
+
+class BoardEvaluator(Board):
+
+    def __init__(self, cell_list):
+        Board.__init__(self)
+        self.cells = cell_list
 
     def evaluate_board(self):
         win_move = self.cell_to_win()
@@ -183,7 +193,8 @@ class ComputerPlayer(Player):
         Player.__init__(self, 'Hal')
 
     def make_move(self, the_board: Board):
-        move = the_board.evaluate_board()
+        test_board = BoardEvaluator(the_board.cells_in_list())
+        move = test_board.evaluate_board()
         return move
 
 
